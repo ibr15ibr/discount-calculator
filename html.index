@@ -1,0 +1,229 @@
+<html><head><base href="https://websim.ai"><title>Discount Calculator - حاسبة الخصم</title><style>
+  body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 20px;
+    background-color: #f4f4f4;
+  }
+  .container {
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+  h1, h2 {
+    text-align: center;
+    color: #333;
+  }
+  label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  input[type="number"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  button:hover {
+    background-color: #45a049;
+  }
+  #result {
+    margin-top: 20px;
+    font-weight: bold;
+    text-align: center;
+  }
+  .language-toggle {
+    text-align: right;
+    margin-bottom: 20px;
+  }
+  .footer {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 0.8em;
+    color: #666;
+  }
+  .footer a {
+    color: #4CAF50;
+    text-decoration: none;
+  }
+  .footer a:hover {
+    text-decoration: underline;
+  }
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+  }
+  .modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 600px;
+  }
+  .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  .close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+</style></head><body>
+  <div class="container">
+    <div class="language-toggle">
+      <button onclick="toggleLanguage()">العربية / English</button>
+    </div>
+    <h1 id="title">Discount Calculator</h1>
+    <div>
+      <label for="original-price" id="label-original-price">Original Price:</label>
+      <input type="number" id="original-price" placeholder="Enter original price">
+    </div>
+    <div>
+      <label for="discount-percentage" id="label-discount-percentage">Discount Percentage:</label>
+      <input type="number" id="discount-percentage" placeholder="Enter discount percentage">
+    </div>
+    <button onclick="calculateDiscount()" id="calculate-button">Calculate</button>
+    <div id="result"></div>
+    <div class="footer">
+      <p><a href="#" onclick="showModal('terms')" id="terms-link">Terms of Service</a> | <a href="#" onclick="showModal('privacy')" id="privacy-link">Privacy Policy</a></p>
+    </div>
+  </div>
+
+  <div id="termsModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('terms')">&times;</span>
+      <h2 id="terms-title">Terms of Service</h2>
+      <div id="terms-content">
+        <p>1. This is a sample Terms of Service for the Discount Calculator application.</p>
+        <p>2. The calculator is provided "as is" without any guarantees or warranty.</p>
+        <p>3. Users are responsible for verifying the accuracy of calculations.</p>
+        <p>4. We reserve the right to modify or discontinue the service at any time.</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="privacyModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('privacy')">&times;</span>
+      <h2 id="privacy-title">Privacy Policy</h2>
+      <div id="privacy-content">
+        <p>1. This Discount Calculator does not collect or store any personal information.</p>
+        <p>2. All calculations are performed locally in your browser.</p>
+        <p>3. We do not use cookies or any tracking technologies.</p>
+        <p>4. Your privacy and security are important to us.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let isEnglish = true;
+
+    const translations = {
+      en: {
+        title: "Discount Calculator",
+        labelOriginalPrice: "Original Price:",
+        labelDiscountPercentage: "Discount Percentage:",
+        calculateButton: "Calculate",
+        resultPrefix: "Discounted price: ",
+        termsLink: "Terms of Service",
+        privacyLink: "Privacy Policy",
+        placeholderOriginalPrice: "Enter original price",
+        placeholderDiscountPercentage: "Enter discount percentage",
+        termsTitle: "Terms of Service",
+        privacyTitle: "Privacy Policy"
+      },
+      ar: {
+        title: "حاسبة الخصم",
+        labelOriginalPrice: "السعر الأصلي:",
+        labelDiscountPercentage: "نسبة الخصم:",
+        calculateButton: "احسب",
+        resultPrefix: "السعر بعد الخصم: ",
+        termsLink: "شروط الخدمة",
+        privacyLink: "سياسة الخصوصية",
+        placeholderOriginalPrice: "أدخل السعر الأصلي",
+        placeholderDiscountPercentage: "أدخل نسبة الخصم",
+        termsTitle: "شروط الخدمة",
+        privacyTitle: "سياسة الخصوصية"
+      }
+    };
+
+    function toggleLanguage() {
+      isEnglish = !isEnglish;
+      updateLanguage();
+    }
+
+    function updateLanguage() {
+      const lang = isEnglish ? 'en' : 'ar';
+      document.getElementById('title').textContent = translations[lang].title;
+      document.getElementById('label-original-price').textContent = translations[lang].labelOriginalPrice;
+      document.getElementById('label-discount-percentage').textContent = translations[lang].labelDiscountPercentage;
+      document.getElementById('calculate-button').textContent = translations[lang].calculateButton;
+      document.getElementById('terms-link').textContent = translations[lang].termsLink;
+      document.getElementById('privacy-link').textContent = translations[lang].privacyLink;
+      document.getElementById('original-price').placeholder = translations[lang].placeholderOriginalPrice;
+      document.getElementById('discount-percentage').placeholder = translations[lang].placeholderDiscountPercentage;
+      document.getElementById('terms-title').textContent = translations[lang].termsTitle;
+      document.getElementById('privacy-title').textContent = translations[lang].privacyTitle;
+      document.dir = isEnglish ? 'ltr' : 'rtl';
+    }
+
+    function calculateDiscount() {
+      const originalPrice = parseFloat(document.getElementById('original-price').value);
+      const discountPercentage = parseFloat(document.getElementById('discount-percentage').value);
+      
+      if (isNaN(originalPrice) || isNaN(discountPercentage)) {
+        document.getElementById('result').textContent = isEnglish ? 'Please enter valid numbers.' : 'الرجاء إدخال أرقام صحيحة.';
+        return;
+      }
+      
+      const discountAmount = originalPrice * (discountPercentage / 100);
+      const discountedPrice = originalPrice - discountAmount;
+      
+      const lang = isEnglish ? 'en' : 'ar';
+      document.getElementById('result').textContent = `${translations[lang].resultPrefix}${discountedPrice.toFixed(2)}`;
+    }
+
+    function showModal(type) {
+      document.getElementById(`${type}Modal`).style.display = "block";
+    }
+
+    function closeModal(type) {
+      document.getElementById(`${type}Modal`).style.display = "none";
+    }
+
+    window.onclick = function(event) {
+      if (event.target.className === "modal") {
+        event.target.style.display = "none";
+      }
+    }
+
+    updateLanguage();
+  </script>
+</body></html>
